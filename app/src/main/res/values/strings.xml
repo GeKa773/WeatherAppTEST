@@ -1,0 +1,40 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">WeatherAppTEST</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="second_fragment_text_1">firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText
+    firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText
+    firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText firstText</string>
+    <string name="second_fragment_text_2">secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText
+    econdText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText
+    econdText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText secondText</string>
+    <string name="second_fragment_text_3">thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText
+    thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText
+    thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText thirdText</string>
+
+    <string name="theme">Theme:</string>
+    <string name="night_mode">Night mode</string>
+    <string name="notification">Notification:</string>
+    <string name="show_alerts">Show alerts</string>
+    <string name="very_hot">Very hot</string>
+    <string name="snow">Snow</string>
+    <string name="hot">Hot</string>
+    <string name="language_text_view">Language:</string>
+    <string name="language">English</string>
+    <string name="english">English</string>
+    <string name="russian">Russian</string>
+    <string name="information">Information:</string>
+    <string name="button_temp">Temp</string>
+    <string name="button_humid">Humid</string>
+    <string name="drag_item">Drag item below and vice versa</string>
+    <string name="button_wind">Wind</string>
+    <string name="button_date">Date</string>
+
+
+
+    <string name="shared_language">lang</string>
+    <string name="shared_night" >isNight</string>
+    <string name="shared_night_mode" >isNightMode</string>
+
+
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_weater_graph"
+    app:startDestination="@id/todayWeatherFragment">
+
+    <fragment
+        android:id="@+id/todayWeatherFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.TodayWeatherFragment"
+        android:label="fragment_today_weather"
+        tools:layout="@layout/fragment_today_weather" >
+        <action
+            android:id="@+id/action_todayWeatherFragment_to_weekWeatherFragment"
+            app:destination="@id/weekWeatherFragment"
+            app:enterAnim="@anim/from_left_to_right"
+            app:exitAnim="@anim/exit_from_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/weekWeatherFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.WeekWeatherFragment"
+        android:label="fragment_week_weather"
+        tools:layout="@layout/fragment_week_weather" >
+        <action
+            android:id="@+id/action_weekWeatherFragment_to_todayWeatherFragment"
+            app:destination="@id/todayWeatherFragment"
+            app:enterAnim="@anim/from_right_to_left"
+            app:exitAnim="@anim/exit_from_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_languageSettingFragment"
+            app:destination="@id/languageSettingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addLocationFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.AddLocationFragment"
+        android:label="fragment_add_location"
+        tools:layout="@layout/fragment_add_location" />
+    <fragment
+        android:id="@+id/languageSettingFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.LanguageSettingFragment"
+        android:label="fragment_language_setting"
+        tools:layout="@layout/fragment_language_setting" >
+        <action
+            android:id="@+id/action_languageSettingFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
+</navigation>

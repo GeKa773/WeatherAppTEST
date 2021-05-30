@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextViewSettingStyle">
+
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+    </style>
+    <style name="TitleTextViewSettingStyle">
+
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+    <style name="ButtonSettingStyle">
+        <item name="textAllCaps">false</item>
+        <item name="background">@drawable/button_setting_fragment</item>
+    </style>
+</resources>

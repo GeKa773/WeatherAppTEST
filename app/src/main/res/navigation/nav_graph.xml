@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/firstAnimFragment">
+
+    <fragment
+        android:id="@+id/firstAnimFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.FirstAnimFragment"
+        android:label="fragment_first_anim"
+        tools:layout="@layout/fragment_first_anim" >
+        <action
+            android:id="@+id/action_firstAnimFragment_to_secondTextFragment"
+            app:destination="@id/secondTextFragment"
+            app:enterAnim="@anim/from_right_to_left"
+            app:exitAnim="@anim/exit_from_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/secondTextFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.SecondTextFragment"
+        android:label="fragment_second_text"
+        tools:layout="@layout/fragment_second_text" />
+</navigation>
