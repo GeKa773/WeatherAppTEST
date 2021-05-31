@@ -38,9 +38,9 @@
     </fragment>
     <fragment
         android:id="@+id/addLocationFragment"
-        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.AddLocationFragment"
+        android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.LocationFragment"
         android:label="fragment_add_location"
-        tools:layout="@layout/fragment_add_location" />
+        tools:layout="@layout/fragment_location" />
     <fragment
         android:id="@+id/languageSettingFragment"
         android:name="com.gekaradchenko.testforwork.weatherapptest.fragment.LanguageSettingFragment"

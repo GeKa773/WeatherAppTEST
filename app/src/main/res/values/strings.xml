@@ -31,10 +31,9 @@
     <string name="button_date">Date</string>
 
 
-
     <string name="shared_language">lang</string>
-    <string name="shared_night" >isNight</string>
-    <string name="shared_night_mode" >isNightMode</string>
+    <string name="shared_night">isNight</string>
+    <string name="shared_night_mode">isNightMode</string>
 
 
 </resources>

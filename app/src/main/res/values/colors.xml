@@ -10,4 +10,7 @@
     <color name="button_background">#00000000</color>
     <color name="button_setting_fragment_color_default">#A3A3A3</color>
     <color name="button_setting_fragment_color_pressed">#A62929</color>
+    <color name="map_border_color">#FFFFFF</color>
+
+
 </resources>
