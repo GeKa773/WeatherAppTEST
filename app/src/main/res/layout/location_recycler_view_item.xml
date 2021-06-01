@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/locationTextViewLocation"
+            style="@style/TextLocationRecyclerViewItems"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Kiev, Ukr"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tomorrowWeatherImageViewLocation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/line1Location"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toStartOf="@+id/tomorrowWeatherImageViewLocation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/locationTextViewLocation"
+            app:srcCompat="@drawable/line1" />
+
+        <ImageView
+            android:id="@+id/todayWeatherImageViewLocation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/line1Location"
+            app:layout_constraintTop_toTopOf="@+id/line1Location"
+            app:srcCompat="@drawable/sun_and_clouds" />
+
+        <TextView
+            android:id="@+id/todayForecastTextViewLocation"
+            style="@style/TextLocationRecyclerViewItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="+21/41% Today"
+            app:layout_constraintStart_toEndOf="@+id/todayWeatherImageViewLocation"
+            app:layout_constraintTop_toTopOf="@+id/line1Location" />
+
+        <ImageView
+            android:id="@+id/line21Location"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginBottom="40dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/line22Location"
+            app:layout_constraintEnd_toStartOf="@+id/tomorrowWeatherImageViewLocation"
+            app:layout_constraintStart_toEndOf="@+id/todayWeatherImageViewLocation"
+            app:srcCompat="@drawable/line2" />
+
+        <ImageView
+            android:id="@+id/line22Location"
+            android:layout_width="173dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerInside"
+            app:layout_constraintStart_toEndOf="@+id/todayWeatherImageViewLocation"
+            app:layout_constraintTop_toBottomOf="@+id/todayForecastTextViewLocation"
+            app:srcCompat="@drawable/line1" />
+
+        <ImageView
+            android:id="@+id/tomorrowWeatherImageViewLocation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/rain_with_thunderstorm" />
+
+        <TextView
+            android:id="@+id/tomorrowForecastTextViewLocation"
+            style="@style/TextLocationRecyclerViewItems"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="tomorrow +21/41% "
+            app:layout_constraintEnd_toEndOf="@+id/line22Location"
+            app:layout_constraintStart_toStartOf="@+id/line22Location"
+            app:layout_constraintTop_toBottomOf="@+id/line1Location" />
+
+        <ImageView
+            android:id="@+id/line3Location"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/line22Location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/line22Location"
+            app:srcCompat="@drawable/line2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

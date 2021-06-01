@@ -18,8 +18,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="Kiev, Evr"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="@dimen/text_weather_fragment_size"
+        style="@style/TextViewWeathersFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todayDateTextView" />
@@ -34,8 +33,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="50.02013 / 30.343253"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="@dimen/text_weather_fragment_size"
+        style="@style/TextViewWeathersFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nowPlaceTextView" />
@@ -67,7 +65,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="Monday, 29.05.2021 "
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        style="@style/TextViewWeathersFragment"
         android:textSize="@dimen/text_weather_fragment_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,8 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="humidity: 50%"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="@dimen/text_weather_fragment_size"
+        style="@style/TextViewWeathersFragment"
         app:layout_constraintBottom_toTopOf="@+id/nowWindSpeedTextView"
         app:layout_constraintStart_toStartOf="@+id/nowWindSpeedTextView"
         app:layout_constraintTop_toBottomOf="@+id/nowWeatherImageView" />
@@ -109,8 +106,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="Wind speed: 7m/s"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="@dimen/text_weather_fragment_size"
+        style="@style/TextViewWeathersFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nowHumidityTextView" />

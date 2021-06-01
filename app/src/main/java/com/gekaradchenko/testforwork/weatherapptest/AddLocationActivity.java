@@ -2,6 +2,7 @@ package com.gekaradchenko.testforwork.weatherapptest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -23,7 +24,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -49,6 +49,15 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
 
     private boolean isPermissionGranter;
 
+    private List<Address> addressList;
+
+    private LocationDatabase locationDatabase;
+
+    private Thread getLocationThread;
+    private Thread saveDBThread;
+    private Runnable runnable;
+    private Runnable runnable2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +65,9 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
 
         nameCityEditText = findViewById(R.id.nameCityEditText);
         addLocationButton = findViewById(R.id.addLocationButton);
+
+        locationDatabase = Room.databaseBuilder(getApplicationContext(),
+                LocationDatabase.class, "locationDB").build();
 
         myCheckPermission();
 
@@ -73,23 +85,70 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    List<Address> addressList = geocoder.getFromLocationName(getCity(), 1);
-                    if (addressList.size() > 0) {
-                        latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
-                        markerOptions.position(latLng);
-                        markerOptions.title(getCity());
-                        googleMap.addMarker(markerOptions);
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 5);
-                        googleMap.animateCamera(cameraUpdate);
-                        Log.d("SSS", "lat: "+ addressList.get(0).getLatitude());
-                        Log.d("SSS", "lon: "+ addressList.get(0).getLongitude());
-                        Log.d("SSS", "name: "+ addressList.get(0).getCountryName());
+                getLatLng();
+
+            }
+
+            private void getLatLng() {
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            addressList = geocoder.getFromLocationName(getCity(), 1);
+                            if (addressList.size() > 0) {
+                                latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
+                                markerOptions.position(latLng);
+                                markerOptions.title(getCity());
+//
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 5);
+                                Log.d("SSS", "lat: " + addressList.get(0).getLatitude());
+                                Log.d("SSS", "lon: " + addressList.get(0).getLongitude());
+                                Log.d("SSS", "name: " + addressList.get(0).getCountryName());
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        googleMap.addMarker(markerOptions);
+                                        googleMap.animateCamera(cameraUpdate);
+                                        insertLocationToDB();
+                                    }
+                                });
+                            }
+                        } catch (IOException e) {
+                            Toast.makeText(AddLocationActivity.this, "Can`t find city", Toast.LENGTH_SHORT).show();
+                        }
+                        getCity();
                     }
-                } catch (IOException e) {
-                    Toast.makeText(AddLocationActivity.this, "Can`t find city", Toast.LENGTH_SHORT).show();
-                }
-                getCity();
+                };
+                getLocationThread = new Thread(runnable);
+                getLocationThread.start();
+
+            }
+
+            private void insertLocationToDB() {
+                runnable2 = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (addressList.size()>0){
+
+                        locationDatabase.getLocationDao()
+                                .insertLocation(new Location(0,addressList.get(0).getLatitude(),addressList.get(0).getLongitude()));
+                                Log.d("SSS", "database size: "+ locationDatabase.getLocationDao().getAllLocations().size());
+                        } else {
+                            Toast.makeText(AddLocationActivity.this, "Can`t save location", Toast.LENGTH_SHORT).show();
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                            }
+                        });
+                    }
+                };
+                saveDBThread = new Thread(runnable2);
+                saveDBThread.start();
 
             }
 

@@ -32,6 +32,10 @@
     <string name="button_wind">Ветер</string>
     <string name="button_date">Дата</string>
 
+
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+
     <string name="shared_language">lang</string>
     <string name="shared_night" >isNight</string>
     <string name="shared_night_mode" >isNightMode</string>

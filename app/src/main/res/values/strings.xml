@@ -31,9 +31,18 @@
     <string name="button_date">Date</string>
 
 
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+
+
+
     <string name="shared_language">lang</string>
     <string name="shared_night">isNight</string>
     <string name="shared_night_mode">isNightMode</string>
+    <string name="KEY" translatable="false">92d56959b946a47f9ad21b1c5c911179</string>
+    <string name="exclude" translatable="false">daily</string>
+
+
 
 
 </resources>
