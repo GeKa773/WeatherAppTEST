@@ -85,7 +85,13 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
                 getLatLng();
+
+                } catch (Exception e){
+
+                }
+                startActivity(new Intent(AddLocationActivity.this, WeatherActivity.class));
 
             }
 

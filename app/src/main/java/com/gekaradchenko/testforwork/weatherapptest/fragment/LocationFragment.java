@@ -1,11 +1,16 @@
 package com.gekaradchenko.testforwork.weatherapptest.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -20,8 +25,10 @@ import com.gekaradchenko.testforwork.weatherapptest.AdapterLocationWeather;
 import com.gekaradchenko.testforwork.weatherapptest.AddLocationActivity;
 import com.gekaradchenko.testforwork.weatherapptest.Location;
 import com.gekaradchenko.testforwork.weatherapptest.LocationDatabase;
+import com.gekaradchenko.testforwork.weatherapptest.LocationForMassive;
 import com.gekaradchenko.testforwork.weatherapptest.LocationForecast;
 import com.gekaradchenko.testforwork.weatherapptest.R;
+import com.gekaradchenko.testforwork.weatherapptest.RecyclerViewItemClickListener;
 import com.gekaradchenko.testforwork.weatherapptest.Unit;
 import com.gekaradchenko.testforwork.weatherapptest.model.Example;
 import com.gekaradchenko.testforwork.weatherapptest.model.Hourly;
@@ -42,9 +49,12 @@ public class LocationFragment extends Fragment {
     private AdapterLocationWeather adapter;
     private ArrayList<LocationForecast> forecastArrayList;
     private ArrayList<Location> locations;
+    private ArrayList<LocationForMassive> locationMass;
     private ArrayList<Hourly> hourlyArrayList;
 
     private LocationDatabase locationDatabase;
+
+    private SharedPreferences.Editor editor;
 
 
     @Override
@@ -61,13 +71,17 @@ public class LocationFragment extends Fragment {
         locationDatabase = Room.databaseBuilder(getContext(),
                 LocationDatabase.class, "locationDB").build();
 
+        editor = this.getActivity().getSharedPreferences(getString(R.string.shared_location), Context.MODE_PRIVATE).edit();
+
         locationButton = view.findViewById(R.id.locationButton);
         forecastArrayList = new ArrayList<>();
+        locationMass = new ArrayList<>();
         recyclerView = view.findViewById(R.id.locationRecyclerview);
 
         adapter = new AdapterLocationWeather();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
         getAllLocationOnDB();
 
@@ -78,6 +92,56 @@ public class LocationFragment extends Fragment {
                 startActivity(new Intent(getContext(), AddLocationActivity.class));
             }
         });
+
+        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getContext(), recyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                editor.putFloat(getString(R.string.lat), (float) forecastArrayList.get(position).getLat());
+                editor.putFloat(getString(R.string.lon), (float) forecastArrayList.get(position).getLon());
+                editor.apply();
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.action_addLocationFragment_to_todayWeatherFragment);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                LocationForecast locationForecast = forecastArrayList.get(viewHolder.getAdapterPosition());
+                int idDelete = locationForecast.getId();
+                for (int i = 0; i < locations.size(); i++) {
+                    if (locations.get(i).getId() == idDelete) {
+                        deleteLocation(locations.get(i));
+
+                    }
+                }
+            }
+        }).attachToRecyclerView(recyclerView);
+    }
+
+    private void deleteLocation(Location location) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                locationDatabase.getLocationDao().deleteLocation(location);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        forecastArrayList = new ArrayList<>();
+                        getAllLocationOnDB();
+                    }
+                });
+            }
+        }).start();
     }
 
     private void getAllLocationOnDB() {
@@ -101,15 +165,16 @@ public class LocationFragment extends Fragment {
     private void getLocationWeather() {
         WeatherService weatherService = RetrofitInstance.getService();
         if (locations.size() > 0) {
-            System.out.println("Location size = " + locations.size());
             for (int i = 0; i < locations.size(); i++) {
+                int id = locations.get(i).getId();
+
 
                 Call<Example> call = weatherService.getWeather(
                         locations.get(i).getLat(),
                         locations.get(i).getLon(),
                         getString(R.string.exclude),
                         getString(R.string.KEY));
-
+                //locationMass.add(new LocationForMassive((float) locations.get(i).getLat(), (float) locations.get(i).getLon()));
                 call.enqueue(new Callback<Example>() {
                     @Override
                     public void onResponse(Call<Example> call, Response<Example> response) {
@@ -127,12 +192,17 @@ public class LocationFragment extends Fragment {
                             String forecastToday = getTempString(tempToday) + "/" + humidityToday + "% " + getString(R.string.today);
                             String forecastTomorrow = getString(R.string.tomorrow) + " " + getTempString(tempTomorrow) + "/" + humidityTomorrow + "%";
                             forecastArrayList.add(new LocationForecast(
+                                    id,
                                     locationName,
                                     Unit.isWeatherIcon(hourlyArrayList.get(0).getWeather().get(0).getId()),
                                     forecastToday,
                                     Unit.isWeatherIcon(hourlyArrayList.get(23).getWeather().get(0).getId()),
-                                    forecastTomorrow));
+                                    forecastTomorrow,
+                                    example.getLat(),
+                                    example.getLon()));
+
                             adapter.setLocationForecasts(forecastArrayList);
+
                         }
                     }
 

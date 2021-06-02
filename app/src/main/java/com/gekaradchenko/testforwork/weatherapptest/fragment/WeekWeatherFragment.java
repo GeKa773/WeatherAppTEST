@@ -15,6 +15,8 @@ import androidx.room.Room;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gekaradchenko.testforwork.weatherapptest.AdapterLocationWeather;
 import com.gekaradchenko.testforwork.weatherapptest.AdapterWeatherNow;
@@ -23,6 +25,7 @@ import com.gekaradchenko.testforwork.weatherapptest.LocationDatabase;
 import com.gekaradchenko.testforwork.weatherapptest.NowForecast;
 import com.gekaradchenko.testforwork.weatherapptest.R;
 import com.gekaradchenko.testforwork.weatherapptest.RecyclerViewItemClickListener;
+import com.gekaradchenko.testforwork.weatherapptest.Unit;
 import com.gekaradchenko.testforwork.weatherapptest.model.Example;
 import com.gekaradchenko.testforwork.weatherapptest.model.Hourly;
 import com.gekaradchenko.testforwork.weatherapptest.service.RetrofitInstance;
@@ -31,21 +34,19 @@ import com.gekaradchenko.testforwork.weatherapptest.service.WeatherService;
 import java.util.ArrayList;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WeekWeatherFragment extends Fragment {
     private ConstraintLayout weekWeatherFragment;
     private RecyclerView recyclerView;
     private AdapterWeatherNow adapter;
+    private double lat, lon;
     private ArrayList<NowForecast> forecasts;
-
     private ArrayList<Hourly> hourlyArrayList;
-//    private String exclude = "daily";
-    public static final String KEY = "92d56959b946a47f9ad21b1c5c911179";
-    private double lat = 50.4547;
-    private double lon = 30.5238;
-
     private ArrayList<Location> locations;
     private LocationDatabase locationDatabase;
+    private TextView weekPlaceTextView, weekCoordinateTextView;
 
 
     @Override
@@ -61,17 +62,19 @@ public class WeekWeatherFragment extends Fragment {
         weekWeatherFragment = view.findViewById(R.id.weekWeatherFragment);
         recyclerView = view.findViewById(R.id.weekRecyclerView);
 
+        weekPlaceTextView = view.findViewById(R.id.weekPlaceTextView);
+        weekCoordinateTextView = view.findViewById(R.id.weekCoordinateTextView);
         locationDatabase = Room.databaseBuilder(getContext(),
                 LocationDatabase.class, "locationDB").build();
+
         adapter = new AdapterWeatherNow();
         forecasts = new ArrayList<>();
         locations = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-
-        getAllLocationOnDB();
-
-        // adapter.setArrayList(forecasts);
+        lat = Unit.getLatShared(getContext());
+        lon = Unit.getLonShared(getContext());
+        getWeatherWeek();
 
 
         recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getContext(), recyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
@@ -94,39 +97,49 @@ public class WeekWeatherFragment extends Fragment {
 
     }
 
-    private void getAllLocationOnDB() {
-        Runnable runnable = new Runnable() {
+    private void getWeatherWeek() {
+        WeatherService weatherService = RetrofitInstance.getService();
+        Call<Example> call = weatherService.getWeather(lat, lon, getString(R.string.exclude), getString(R.string.KEY));
+        call.enqueue(new Callback<Example>() {
             @Override
-            public void run() {
-                locations = (ArrayList<Location>) locationDatabase.getLocationDao().getAllLocations();
+            public void onResponse(Call<Example> call, Response<Example> response) {
+                Example example = response.body();
+                if (example != null && example.getHourly() != null) {
+                    hourlyArrayList = (ArrayList<Hourly>) example.getHourly();
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        getLocationWeather();
+                    weekPlaceTextView.setText(example.getTimezone());
+                    weekCoordinateTextView.setText(example.getLat() + ", " + example.getLon());
+
+                    for (int i = 0; i < hourlyArrayList.size(); i++) {
+                        int temp = (int) (hourlyArrayList.get(i).getTemp() - 273.15);
+                        int humid = hourlyArrayList.get(i).getHumidity();
+                        Double windSpeed = hourlyArrayList.get(i).getWindSpeed();
+
+                        String tempNow;
+                        if (temp > 0) tempNow = "+" + temp;
+                        else tempNow = temp + "";
+                        String s = tempNow + " / " + humid + "% / " + windSpeed + getString(R.string.m_c);
+                        String date;
+                        if (i == 0) {
+                            date = getString(R.string.now);
+                        } else if (i == 1) {
+                            date = "+1 " + getString(R.string.hour);
+                        } else date = "+" + i + " " + getString(R.string.hours);
+
+                        forecasts.add(new NowForecast(
+                                Unit.isWeatherIcon(hourlyArrayList.get(i).getWeather().get(0).getId()), date, s));
                     }
-                });
+                    adapter.setArrayList(forecasts);
+                }
             }
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
+
+            @Override
+            public void onFailure(Call<Example> call, Throwable t) {
+
+            }
+        });
     }
 
-//    private Object getLocationWeather() {
-//        WeatherService weatherService = RetrofitInstance.getService();
-//        if (locations.size() > 0) {
-//            for (int i = 0; i <locations.size(); i ++){
-//
-//            Call<Example> call = weatherService.getWeather(
-//                    locations.get(i).getLat(),
-//                    locations.get(i).getLon(),
-//                    getString(R.string.exclude),
-//                    getString(R.string.KEY));
-//            }
-//
-//        }
-//
-//    }
 
     private void navigationGo(View view) {
         NavController navController = Navigation.findNavController(view);

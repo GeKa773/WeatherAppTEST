@@ -1,5 +1,6 @@
 package com.gekaradchenko.testforwork.weatherapptest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -27,7 +28,14 @@ public class Unit {
         else if (id < 800) return R.drawable.sun_and_clouds;
         else if (id == 800) return R.drawable.sun;
         else return R.drawable.clounds;
+    }
 
-
+    public static double getLatShared(Context context) {
+        SharedPreferences sharedLat =  context.getSharedPreferences("location", Context.MODE_PRIVATE);
+        return (double)( sharedLat.getFloat("lat",50.4547f));
+    }
+    public static double getLonShared(Context context) {
+        SharedPreferences sharedLon =  context.getSharedPreferences("location", Context.MODE_PRIVATE);
+        return (double)( sharedLon.getFloat("lon",30.5238f));
     }
 }

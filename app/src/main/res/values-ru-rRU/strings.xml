@@ -36,6 +36,21 @@
     <string name="today">Сегодня</string>
     <string name="tomorrow">Завтра</string>
 
+    <string name="humidity">Влажность: </string>
+    <string name="wind_speed">Скорость ветра: </string>
+    <string name="m_c">м/с </string>
+    <string name="now">Сейчас</string>
+    <string name="hour">Час</string>
+    <string name="hours">Часов</string>
+
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+
     <string name="shared_language">lang</string>
     <string name="shared_night" >isNight</string>
     <string name="shared_night_mode" >isNightMode</string>
