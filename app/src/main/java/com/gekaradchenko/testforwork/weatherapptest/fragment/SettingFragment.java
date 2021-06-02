@@ -2,17 +2,14 @@ package com.gekaradchenko.testforwork.weatherapptest.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +19,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.gekaradchenko.testforwork.weatherapptest.R;
-import com.gekaradchenko.testforwork.weatherapptest.Unit;
-
-import java.util.Locale;
+import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
 
 
 public class SettingFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {

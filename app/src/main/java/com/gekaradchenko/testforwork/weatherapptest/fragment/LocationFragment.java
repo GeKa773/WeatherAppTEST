@@ -15,29 +15,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.gekaradchenko.testforwork.weatherapptest.AdapterLocationWeather;
+import com.gekaradchenko.testforwork.weatherapptest.adapter.AdapterLocationWeather;
 import com.gekaradchenko.testforwork.weatherapptest.AddLocationActivity;
-import com.gekaradchenko.testforwork.weatherapptest.Location;
-import com.gekaradchenko.testforwork.weatherapptest.LocationDatabase;
-import com.gekaradchenko.testforwork.weatherapptest.LocationForMassive;
-import com.gekaradchenko.testforwork.weatherapptest.LocationForecast;
+import com.gekaradchenko.testforwork.weatherapptest.model.Location;
+import com.gekaradchenko.testforwork.weatherapptest.data.LocationDatabase;
+import com.gekaradchenko.testforwork.weatherapptest.model.LocationForMassive;
+import com.gekaradchenko.testforwork.weatherapptest.model.LocationForecast;
 import com.gekaradchenko.testforwork.weatherapptest.R;
-import com.gekaradchenko.testforwork.weatherapptest.RecyclerViewItemClickListener;
-import com.gekaradchenko.testforwork.weatherapptest.Unit;
+import com.gekaradchenko.testforwork.weatherapptest.adapter.RecyclerViewItemClickListener;
+import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
 import com.gekaradchenko.testforwork.weatherapptest.model.Example;
 import com.gekaradchenko.testforwork.weatherapptest.model.Hourly;
 import com.gekaradchenko.testforwork.weatherapptest.service.RetrofitInstance;
 import com.gekaradchenko.testforwork.weatherapptest.service.WeatherService;
 
 import java.util.ArrayList;
-
-import javax.xml.transform.Result;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -194,9 +191,9 @@ public class LocationFragment extends Fragment {
                             forecastArrayList.add(new LocationForecast(
                                     id,
                                     locationName,
-                                    Unit.isWeatherIcon(hourlyArrayList.get(0).getWeather().get(0).getId()),
+                                    Unit.isWeatherIcon(hourlyArrayList.get(0).getWeather().get(0).getId(),example.getTimezoneOffset(),0),
                                     forecastToday,
-                                    Unit.isWeatherIcon(hourlyArrayList.get(23).getWeather().get(0).getId()),
+                                    Unit.isWeatherIcon(hourlyArrayList.get(23).getWeather().get(0).getId(),example.getTimezoneOffset(),0),
                                     forecastTomorrow,
                                     example.getLat(),
                                     example.getLon()));

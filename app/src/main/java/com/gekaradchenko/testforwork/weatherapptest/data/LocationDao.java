@@ -1,9 +1,11 @@
-package com.gekaradchenko.testforwork.weatherapptest;
+package com.gekaradchenko.testforwork.weatherapptest.data;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.gekaradchenko.testforwork.weatherapptest.model.Location;
 
 import java.util.List;
 

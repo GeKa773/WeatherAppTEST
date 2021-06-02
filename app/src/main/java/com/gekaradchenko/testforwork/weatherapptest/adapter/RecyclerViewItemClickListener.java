@@ -1,4 +1,4 @@
-package com.gekaradchenko.testforwork.weatherapptest;
+package com.gekaradchenko.testforwork.weatherapptest.adapter;
 
 import android.content.Context;
 import android.view.GestureDetector;

@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {

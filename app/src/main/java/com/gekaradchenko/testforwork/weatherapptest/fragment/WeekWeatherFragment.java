@@ -15,17 +15,15 @@ import androidx.room.Room;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gekaradchenko.testforwork.weatherapptest.AdapterLocationWeather;
-import com.gekaradchenko.testforwork.weatherapptest.AdapterWeatherNow;
-import com.gekaradchenko.testforwork.weatherapptest.Location;
-import com.gekaradchenko.testforwork.weatherapptest.LocationDatabase;
-import com.gekaradchenko.testforwork.weatherapptest.NowForecast;
+import com.gekaradchenko.testforwork.weatherapptest.adapter.AdapterWeatherNow;
+import com.gekaradchenko.testforwork.weatherapptest.model.Location;
+import com.gekaradchenko.testforwork.weatherapptest.data.LocationDatabase;
+import com.gekaradchenko.testforwork.weatherapptest.model.NowForecast;
 import com.gekaradchenko.testforwork.weatherapptest.R;
-import com.gekaradchenko.testforwork.weatherapptest.RecyclerViewItemClickListener;
-import com.gekaradchenko.testforwork.weatherapptest.Unit;
+import com.gekaradchenko.testforwork.weatherapptest.adapter.RecyclerViewItemClickListener;
+import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
 import com.gekaradchenko.testforwork.weatherapptest.model.Example;
 import com.gekaradchenko.testforwork.weatherapptest.model.Hourly;
 import com.gekaradchenko.testforwork.weatherapptest.service.RetrofitInstance;
@@ -47,7 +45,6 @@ public class WeekWeatherFragment extends Fragment {
     private ArrayList<Location> locations;
     private LocationDatabase locationDatabase;
     private TextView weekPlaceTextView, weekCoordinateTextView;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +74,8 @@ public class WeekWeatherFragment extends Fragment {
         getWeatherWeek();
 
 
-        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getContext(), recyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getContext(),
+                recyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 navigationGo(view);
@@ -127,7 +125,7 @@ public class WeekWeatherFragment extends Fragment {
                         } else date = "+" + i + " " + getString(R.string.hours);
 
                         forecasts.add(new NowForecast(
-                                Unit.isWeatherIcon(hourlyArrayList.get(i).getWeather().get(0).getId()), date, s));
+                                Unit.isWeatherIcon(hourlyArrayList.get(i).getWeather().get(0).getId(), example.getTimezoneOffset(), i), date, s));
                     }
                     adapter.setArrayList(forecasts);
                 }

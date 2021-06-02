@@ -1,5 +1,6 @@
 package com.gekaradchenko.testforwork.weatherapptest.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gekaradchenko.testforwork.weatherapptest.MainActivity;
 import com.gekaradchenko.testforwork.weatherapptest.R;
@@ -46,6 +48,35 @@ public class SecondTextFragment extends Fragment {
         titleTextView = view.findViewById(R.id.secondFragmentTitleTextView);
         textTextView = view.findViewById(R.id.secondFragmentTextTextView);
         androidTeamTextView = view.findViewById(R.id.secondAndroidTextView);
+        androidTeamTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.custom_dialog);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.setCancelable(true);
+                Button dialogPrivateButton = dialog.findViewById(R.id.dialogPrivateButton);
+                Button dialogTermButton = dialog.findViewById(R.id.dialogTermButton);
+                dialogPrivateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Toast.makeText(getContext(), "Private policy", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+
+                dialogTermButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getContext(), "Term of using", Toast.LENGTH_SHORT).show();
+
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
         button = view.findViewById(R.id.secondFragmentButton);
         setView();
         button.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +100,7 @@ public class SecondTextFragment extends Fragment {
 
                 textTextView.setText(getString(R.string.second_fragment_text_1));
                 titleTextView.setText("Quick");
-                button.setText("NEXT TIP");
+                button.setText(getString(R.string.next_tip));
                 break;
             }
             case 1: {
@@ -78,7 +109,7 @@ public class SecondTextFragment extends Fragment {
                 androidTeamTextView.setVisibility(View.INVISIBLE);
                 textTextView.setText(getString(R.string.second_fragment_text_2));
                 titleTextView.setText("Stable");
-                button.setText("NEXT TIP");
+                button.setText(getString(R.string.next_tip));
                 break;
             }
             case 2: {
@@ -88,7 +119,7 @@ public class SecondTextFragment extends Fragment {
 
                 textTextView.setText(getString(R.string.second_fragment_text_3));
                 titleTextView.setText("Beautifull");
-                button.setText("GO TO THE APP");
+                button.setText(getString(R.string.go_to_the_app));
                 break;
             }
         }

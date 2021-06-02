@@ -1,4 +1,4 @@
-package com.gekaradchenko.testforwork.weatherapptest;
+package com.gekaradchenko.testforwork.weatherapptest.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

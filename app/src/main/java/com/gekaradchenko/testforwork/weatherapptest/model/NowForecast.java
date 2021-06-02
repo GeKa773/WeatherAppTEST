@@ -1,4 +1,4 @@
-package com.gekaradchenko.testforwork.weatherapptest;
+package com.gekaradchenko.testforwork.weatherapptest.model;
 
 public class NowForecast {
     private int ImageView;

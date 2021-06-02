@@ -1,6 +1,5 @@
 package com.gekaradchenko.testforwork.weatherapptest.fragment;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -17,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gekaradchenko.testforwork.weatherapptest.Location;
+import com.gekaradchenko.testforwork.weatherapptest.model.Location;
 import com.gekaradchenko.testforwork.weatherapptest.R;
-import com.gekaradchenko.testforwork.weatherapptest.Unit;
+import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
 import com.gekaradchenko.testforwork.weatherapptest.model.Current;
 import com.gekaradchenko.testforwork.weatherapptest.model.Example;
 import com.gekaradchenko.testforwork.weatherapptest.service.RetrofitInstance;
@@ -133,7 +132,7 @@ public class TodayWeatherFragment extends Fragment {
                     int temp = (int) (current.getTemp() - 273.15);
                     if (temp > 0) nowTempTextView.setText("+" + temp);
                     else nowTempTextView.setText("" + temp);
-                    nowWeatherImageView.setImageResource(Unit.isWeatherIcon(current.getWeather().get(0).getId()));
+                    nowWeatherImageView.setImageResource(Unit.isWeatherIcon(current.getWeather().get(0).getId(),example.getTimezoneOffset(),0));
 
                     int humidity = current.getHumidity();
                     nowHumidityTextView.setText(getString(R.string.humidity) + " " + humidity + "%");

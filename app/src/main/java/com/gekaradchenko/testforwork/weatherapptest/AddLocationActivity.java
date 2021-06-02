@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.gekaradchenko.testforwork.weatherapptest.model.Location;
+import com.gekaradchenko.testforwork.weatherapptest.data.LocationDatabase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
