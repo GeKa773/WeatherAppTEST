@@ -20,7 +20,7 @@ import com.gekaradchenko.testforwork.weatherapptest.R;
 
 
 public class FirstAnimFragment extends Fragment {
-    private ImageView imageView2, imageView3, imageView4, imageView5, imageView6,
+    private ImageView imageView2, imageView3, imageView4, imageView5, imageView6, imageView7, imageView8,
             imageView9, imageView10, imageView11, imageView12, imageView13;
 
     private Animation animation1, animation2, animation3;
@@ -44,6 +44,8 @@ public class FirstAnimFragment extends Fragment {
         imageView4 = view.findViewById(R.id.imageView4);
         imageView5 = view.findViewById(R.id.imageView5);
         imageView6 = view.findViewById(R.id.imageView6);
+        imageView7 = view.findViewById(R.id.imageView7);
+        imageView8 = view.findViewById(R.id.imageView8);
         imageView9 = view.findViewById(R.id.imageView9);
         imageView10 = view.findViewById(R.id.imageView10);
         imageView11 = view.findViewById(R.id.imageView11);
@@ -54,12 +56,14 @@ public class FirstAnimFragment extends Fragment {
         animation3 = AnimationUtils.loadAnimation(getContext(), R.anim.anim3);
         imageView2.startAnimation(animation1);
         imageView5.startAnimation(animation1);
+        imageView8.startAnimation(animation1);
         imageView10.startAnimation(animation1);
         imageView13.startAnimation(animation1);
         imageView3.startAnimation(animation2);
         imageView6.startAnimation(animation2);
         imageView12.startAnimation(animation2);
         imageView4.startAnimation(animation3);
+        imageView7.startAnimation(animation3);
         imageView9.startAnimation(animation3);
         imageView11.startAnimation(animation3);
         firstFragment = view.findViewById(R.id.firstFragment);

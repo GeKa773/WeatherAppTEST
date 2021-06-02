@@ -56,6 +56,9 @@
     <string name="privacy_policy">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</string>
     <string name="term_of_using">СРОК ИСПОЛЬЗОВАНИЯ</string>
 
+    <string name="home_weather_bottom">Домашняя погода</string>
+    <string name="location_bottom">Локация</string>
+    <string name="Setting_bottom">Настройки</string>
 
     <string name="quick">Быстро</string>
     <string name="stable">Стабильно</string>

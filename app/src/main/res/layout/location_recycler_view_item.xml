@@ -52,12 +52,15 @@
         <TextView
             android:id="@+id/todayForecastTextViewLocation"
             style="@style/TextLocationRecyclerViewItems"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:text="+21/41% Today"
+            app:layout_constraintEnd_toStartOf="@+id/tomorrowWeatherImageViewLocation"
             app:layout_constraintStart_toEndOf="@+id/todayWeatherImageViewLocation"
             app:layout_constraintTop_toTopOf="@+id/line1Location" />
 
@@ -76,10 +79,13 @@
 
         <ImageView
             android:id="@+id/line22Location"
-            android:layout_width="173dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="24dp"
             android:scaleType="centerInside"
+            app:layout_constraintEnd_toEndOf="@+id/line21Location"
             app:layout_constraintStart_toEndOf="@+id/todayWeatherImageViewLocation"
             app:layout_constraintTop_toBottomOf="@+id/todayForecastTextViewLocation"
             app:srcCompat="@drawable/line1" />
@@ -102,8 +108,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="16dp"
             android:text="tomorrow +21/41% "
-            app:layout_constraintEnd_toEndOf="@+id/line22Location"
+            app:layout_constraintBottom_toBottomOf="@+id/line22Location"
+            app:layout_constraintEnd_toStartOf="@+id/tomorrowWeatherImageViewLocation"
             app:layout_constraintStart_toStartOf="@+id/line22Location"
             app:layout_constraintTop_toBottomOf="@+id/line1Location" />
 

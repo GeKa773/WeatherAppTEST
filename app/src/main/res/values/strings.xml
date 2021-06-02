@@ -58,6 +58,10 @@
     <string name="privacy_policy">PRIVACY POLICY</string>
     <string name="term_of_using">TERM OF USING</string>
 
+    <string name="home_weather_bottom">Home weather</string>
+    <string name="location_bottom">Location</string>
+    <string name="Setting_bottom">Setting</string>
+
 
 
     <string name="lat" translatable="false">lat</string>

@@ -53,7 +53,7 @@ public class SecondTextFragment extends Fragment {
             public void onClick(View v) {
                 Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.custom_dialog);
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dialog.setCancelable(true);
                 Button dialogPrivateButton = dialog.findViewById(R.id.dialogPrivateButton);
                 Button dialogTermButton = dialog.findViewById(R.id.dialogTermButton);
@@ -99,7 +99,7 @@ public class SecondTextFragment extends Fragment {
                 imageView.setImageResource(R.drawable.clounds);
 
                 textTextView.setText(getString(R.string.second_fragment_text_1));
-                titleTextView.setText("Quick");
+                titleTextView.setText(getString(R.string.quick));
                 button.setText(getString(R.string.next_tip));
                 break;
             }
@@ -108,7 +108,7 @@ public class SecondTextFragment extends Fragment {
 
                 androidTeamTextView.setVisibility(View.INVISIBLE);
                 textTextView.setText(getString(R.string.second_fragment_text_2));
-                titleTextView.setText("Stable");
+                titleTextView.setText(getString(R.string.stable));
                 button.setText(getString(R.string.next_tip));
                 break;
             }
@@ -118,7 +118,7 @@ public class SecondTextFragment extends Fragment {
                 androidTeamTextView.setGravity(Gravity.RIGHT);
 
                 textTextView.setText(getString(R.string.second_fragment_text_3));
-                titleTextView.setText("Beautifull");
+                titleTextView.setText(getString(R.string.beautiful));
                 button.setText(getString(R.string.go_to_the_app));
                 break;
             }
