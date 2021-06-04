@@ -1,6 +1,6 @@
 package com.gekaradchenko.testforwork.weatherapptest.service;
 
-import com.gekaradchenko.testforwork.weatherapptest.model.Example;
+import com.gekaradchenko.testforwork.weatherapptest.retrofitmodel.Example;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

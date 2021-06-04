@@ -2,6 +2,7 @@ package com.gekaradchenko.testforwork.weatherapptest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.Manifest;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.gekaradchenko.testforwork.weatherapptest.model.Location;
 import com.gekaradchenko.testforwork.weatherapptest.data.LocationDatabase;
+import com.gekaradchenko.testforwork.weatherapptest.viewmodel.LocationWeatherFragmentViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -53,12 +55,13 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
 
     private List<Address> addressList;
 
-    private LocationDatabase locationDatabase;
 
     private Thread getLocationThread;
-    private Thread saveDBThread;
+
     private Runnable runnable;
-    private Runnable runnable2;
+
+
+    private LocationWeatherFragmentViewModel locationWeatherFragmentViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +71,11 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
         nameCityEditText = findViewById(R.id.nameCityEditText);
         addLocationButton = findViewById(R.id.addLocationButton);
 
-        locationDatabase = Room.databaseBuilder(getApplicationContext(),
-                LocationDatabase.class, "locationDB").build();
+        locationWeatherFragmentViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(LocationWeatherFragmentViewModel.class);
+
+
 
         myCheckPermission();
 
@@ -107,11 +113,8 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
                                 latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
                                 markerOptions.position(latLng);
                                 markerOptions.title(getCity());
-//
+
                                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 5);
-                                Log.d("SSS", "lat: " + addressList.get(0).getLatitude());
-                                Log.d("SSS", "lon: " + addressList.get(0).getLongitude());
-                                Log.d("SSS", "name: " + addressList.get(0).getCountryName());
 
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -134,30 +137,7 @@ public class AddLocationActivity extends AppCompatActivity implements OnMapReady
             }
 
             private void insertLocationToDB() {
-                runnable2 = new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if (addressList.size()>0){
-
-                        locationDatabase.getLocationDao()
-                                .insertLocation(new Location(0,addressList.get(0).getLatitude(),addressList.get(0).getLongitude()));
-                                Log.d("SSS", "database size: "+ locationDatabase.getLocationDao().getAllLocations().size());
-                        } else {
-                            Toast.makeText(AddLocationActivity.this, "Can`t save location", Toast.LENGTH_SHORT).show();
-                        }
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                            }
-                        });
-                    }
-                };
-                saveDBThread = new Thread(runnable2);
-                saveDBThread.start();
-
+                locationWeatherFragmentViewModel.insertLocation(new Location(0,addressList.get(0).getLatitude(),addressList.get(0).getLongitude()));
             }
 
             private String getCity() {

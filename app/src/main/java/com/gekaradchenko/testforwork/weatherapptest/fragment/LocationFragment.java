@@ -1,57 +1,58 @@
 package com.gekaradchenko.testforwork.weatherapptest.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.gekaradchenko.testforwork.weatherapptest.adapter.AdapterLocationWeather;
 import com.gekaradchenko.testforwork.weatherapptest.AddLocationActivity;
-import com.gekaradchenko.testforwork.weatherapptest.model.Location;
-import com.gekaradchenko.testforwork.weatherapptest.data.LocationDatabase;
-import com.gekaradchenko.testforwork.weatherapptest.model.LocationForMassive;
 import com.gekaradchenko.testforwork.weatherapptest.model.LocationForecast;
 import com.gekaradchenko.testforwork.weatherapptest.R;
 import com.gekaradchenko.testforwork.weatherapptest.adapter.RecyclerViewItemClickListener;
-import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
-import com.gekaradchenko.testforwork.weatherapptest.model.Example;
-import com.gekaradchenko.testforwork.weatherapptest.model.Hourly;
-import com.gekaradchenko.testforwork.weatherapptest.service.RetrofitInstance;
-import com.gekaradchenko.testforwork.weatherapptest.service.WeatherService;
+import com.gekaradchenko.testforwork.weatherapptest.viewmodel.LocationWeatherFragmentViewModel;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
 
 public class LocationFragment extends Fragment {
     private Button locationButton;
     private RecyclerView recyclerView;
     private AdapterLocationWeather adapter;
     private ArrayList<LocationForecast> forecastArrayList;
-    private ArrayList<Location> locations;
-    private ArrayList<LocationForMassive> locationMass;
-    private ArrayList<Hourly> hourlyArrayList;
-
-    private LocationDatabase locationDatabase;
 
     private SharedPreferences.Editor editor;
+
+    private LocationWeatherFragmentViewModel  locationWeatherFragmentViewModel;
+
+    private boolean isPermissionGranter;
 
 
     @Override
@@ -65,14 +66,15 @@ public class LocationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        locationDatabase = Room.databaseBuilder(getContext(),
-                LocationDatabase.class, "locationDB").build();
+        locationWeatherFragmentViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getActivity().getApplication())
+                .create(LocationWeatherFragmentViewModel.class);
 
         editor = this.getActivity().getSharedPreferences(getString(R.string.shared_location), Context.MODE_PRIVATE).edit();
 
         locationButton = view.findViewById(R.id.locationButton);
         forecastArrayList = new ArrayList<>();
-        locationMass = new ArrayList<>();
+
         recyclerView = view.findViewById(R.id.locationRecyclerview);
 
         adapter = new AdapterLocationWeather();
@@ -80,13 +82,21 @@ public class LocationFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        getAllLocationOnDB();
+
+        getAllLocation();
 
 
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddLocationActivity.class));
+                myCheckPermission();
+                if (isPermissionGranter) {
+                    startActivity(new Intent(getContext(), AddLocationActivity.class));
+                    } else {
+                        Toast.makeText(getContext(), "Google Play service not available", Toast.LENGTH_SHORT).show();
+
+                    }
+
             }
         });
 
@@ -115,108 +125,56 @@ public class LocationFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 LocationForecast locationForecast = forecastArrayList.get(viewHolder.getAdapterPosition());
                 int idDelete = locationForecast.getId();
-                for (int i = 0; i < locations.size(); i++) {
-                    if (locations.get(i).getId() == idDelete) {
-                        deleteLocation(locations.get(i));
 
-                    }
-                }
+                locationWeatherFragmentViewModel.deleteLocation(idDelete);
+//                forecastArrayList = new ArrayList<>();
+//                getAllLocation();
+
             }
         }).attachToRecyclerView(recyclerView);
     }
 
-    private void deleteLocation(Location location) {
-        new Thread(new Runnable() {
+    private void getAllLocation() {
+
+
+        LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
+
+        locationWeatherFragmentViewModel.getLocationWeather().observe(lifecycleOwner,
+                new Observer<List<LocationForecast>>() {
+                    @Override
+                    public void onChanged(List<LocationForecast> locationForecasts) {
+                        forecastArrayList = (ArrayList<LocationForecast>) locationForecasts;
+                        adapter.setLocationForecasts(forecastArrayList);
+
+                    }
+                });
+    }
+
+
+    private void myCheckPermission() {
+        Dexter.withContext(getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
-            public void run() {
-                locationDatabase.getLocationDao().deleteLocation(location);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        forecastArrayList = new ArrayList<>();
-                        getAllLocationOnDB();
-                    }
-                });
-            }
-        }).start();
-    }
+            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
 
-    private void getAllLocationOnDB() {
-        Runnable runnable = new Runnable() {
+                isPermissionGranter = true;
+                Toast.makeText(getContext(), "Permission Granter", Toast.LENGTH_SHORT).show();
+            }
+
             @Override
-            public void run() {
-                locations = (ArrayList<Location>) locationDatabase.getLocationDao().getAllLocations();
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getLocationWeather();
-                    }
-                });
-            }
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
-    }
-
-    private void getLocationWeather() {
-        WeatherService weatherService = RetrofitInstance.getService();
-        if (locations.size() > 0) {
-            for (int i = 0; i < locations.size(); i++) {
-                int id = locations.get(i).getId();
-
-
-                Call<Example> call = weatherService.getWeather(
-                        locations.get(i).getLat(),
-                        locations.get(i).getLon(),
-                        getString(R.string.exclude),
-                        getString(R.string.KEY));
-                //locationMass.add(new LocationForMassive((float) locations.get(i).getLat(), (float) locations.get(i).getLon()));
-                call.enqueue(new Callback<Example>() {
-                    @Override
-                    public void onResponse(Call<Example> call, Response<Example> response) {
-                        Example example = response.body();
-                        if (example != null && example.getHourly() != null) {
-                            hourlyArrayList = (ArrayList<Hourly>) example.getHourly();
-                            String locationName = example.getTimezone();
-
-                            int tempToday = (int) (hourlyArrayList.get(0).getTemp() - 273.15);
-                            int humidityToday = hourlyArrayList.get(0).getHumidity();
-
-                            int tempTomorrow = (int) (hourlyArrayList.get(23).getTemp() - 273.15);
-                            int humidityTomorrow = hourlyArrayList.get(23).getHumidity();
-
-                            String forecastToday = getTempString(tempToday) + "/" + humidityToday + "% " + getString(R.string.today);
-                            String forecastTomorrow = getString(R.string.tomorrow) + " " + getTempString(tempTomorrow) + "/" + humidityTomorrow + "%";
-                            forecastArrayList.add(new LocationForecast(
-                                    id,
-                                    locationName,
-                                    Unit.isWeatherIcon(hourlyArrayList.get(0).getWeather().get(0).getId(),example.getTimezoneOffset(),0),
-                                    forecastToday,
-                                    Unit.isWeatherIcon(hourlyArrayList.get(23).getWeather().get(0).getId(),example.getTimezoneOffset(),0),
-                                    forecastTomorrow,
-                                    example.getLat(),
-                                    example.getLon()));
-
-                            adapter.setLocationForecasts(forecastArrayList);
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Example> call, Throwable t) {
-
-                    }
-                });
-
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getActivity().getPackageName(), "");
+                intent.setData(uri);
+                startActivity(intent);
             }
 
-        }
-    }
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
 
-    private String getTempString(int temp) {
-        if (temp > 0) {
-            return "+" + temp;
-        } else return "" + temp;
+                permissionToken.continuePermissionRequest();
+            }
+        }).check();
     }
 }

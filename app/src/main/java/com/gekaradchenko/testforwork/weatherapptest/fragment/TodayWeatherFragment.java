@@ -1,12 +1,14 @@
 package com.gekaradchenko.testforwork.weatherapptest.fragment;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -16,44 +18,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gekaradchenko.testforwork.weatherapptest.model.Location;
 import com.gekaradchenko.testforwork.weatherapptest.R;
-import com.gekaradchenko.testforwork.weatherapptest.units.Unit;
-import com.gekaradchenko.testforwork.weatherapptest.model.Current;
-import com.gekaradchenko.testforwork.weatherapptest.model.Example;
-import com.gekaradchenko.testforwork.weatherapptest.service.RetrofitInstance;
-import com.gekaradchenko.testforwork.weatherapptest.service.WeatherService;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.gekaradchenko.testforwork.weatherapptest.model.TodayForecast;
+import com.gekaradchenko.testforwork.weatherapptest.viewmodel.TodayWeatherFragmentViewModel;
 
 
 public class TodayWeatherFragment extends Fragment {
     private ConstraintLayout todayWeatherFragment;
-    private double lat, lon;
-    private SharedPreferences sharedPreferences;
-    private ArrayList<Location> locations;
-    private Current current;
 
-    private TextView nowPlaceTextView,
+    private TextView
+            todayDateTextView,
+            nowPlaceTextView,
             nowCoordinateTextView,
+            nowTempTextView,
             nowHumidityTextView,
             nowWindSpeedTextView,
-            nowTempTextView,
-            todayDateTextView,
             nowTimeTextView;
-
     private ImageView nowWeatherImageView;
 
-    private Date date;
-    private SimpleDateFormat formatDate, formatTime;
-    private Calendar calendar;
+    private TodayWeatherFragmentViewModel todayWeatherFragmentViewModel;
+    private TodayForecast forecast;
 
 
     @Override
@@ -75,20 +59,11 @@ public class TodayWeatherFragment extends Fragment {
         todayDateTextView = view.findViewById(R.id.todayDateTextView);
         nowTimeTextView = view.findViewById(R.id.nowTimeTextView);
         nowWeatherImageView = view.findViewById(R.id.nowWeatherImageView);
-        date = new Date();
-        formatDate = new SimpleDateFormat("dd.MM.yyyy");
-        formatTime = new SimpleDateFormat("HH:mm");
-        calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.get(Calendar.DAY_OF_WEEK);
-        todayDateTextView.setText(getDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)) + ", " + formatDate.format(date));
-        nowTimeTextView.setText(formatTime.format(date));
 
+        todayWeatherFragmentViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getActivity().getApplication())
+                .create(TodayWeatherFragmentViewModel.class);
 
-
-        lat = Unit.getLatShared(getContext());
-        lon = Unit.getLonShared(getContext());
-        nowCoordinateTextView.setText(lat + ", " + lon);
         getWeatherNow();
 
 
@@ -102,52 +77,33 @@ public class TodayWeatherFragment extends Fragment {
         });
     }
 
-    private String getDayOfWeek(int i) {
-        --i;
-        if (i < 0) i = 7;
-        if (i > 7) i = 1;
-        if (i == 1) return getString(R.string.monday);
-        else if (i == 2) return getString(R.string.thursday);
-        else if (i == 3) return getString(R.string.wednesday);
-        else if (i == 4) return getString(R.string.thursday);
-        else if (i == 5) return getString(R.string.friday);
-        else if (i == 6) return getString(R.string.saturday);
-        else if (i == 7) return getString(R.string.sunday);
-        else return "Day";
-    }
 
     private void getWeatherNow() {
-        WeatherService weatherService = RetrofitInstance.getService();
-        Call<Example> call = weatherService.getWeather(lat, lon, getString(R.string.exclude), getString(R.string.KEY));
-        call.enqueue(new Callback<Example>() {
-            @Override
-            public void onResponse(Call<Example> call, Response<Example> response) {
-                Example example = response.body();
-                if (example != null && example.getCurrent() != null) {
-                    current = example.getCurrent();
+        LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
 
-                    String locationName = example.getTimezone();
-                    nowPlaceTextView.setText(locationName);
+        todayWeatherFragmentViewModel.getTodayWeather().observe(lifecycleOwner,
+                new Observer<TodayForecast>() {
+                    @Override
+                    public void onChanged(TodayForecast todayForecast) {
+                        forecast = todayForecast;
+                        initViewTodayFragment();
+                    }
+                });
+    }
 
-                    int temp = (int) (current.getTemp() - 273.15);
-                    if (temp > 0) nowTempTextView.setText("+" + temp);
-                    else nowTempTextView.setText("" + temp);
-                    nowWeatherImageView.setImageResource(Unit.isWeatherIcon(current.getWeather().get(0).getId(),example.getTimezoneOffset(),0));
+    private void initViewTodayFragment() {
 
-                    int humidity = current.getHumidity();
-                    nowHumidityTextView.setText(getString(R.string.humidity) + " " + humidity + "%");
+        if (forecast!= null){
+            todayDateTextView.setText(forecast.getDate());
+            nowPlaceTextView.setText(forecast.getLocalName());
+            nowCoordinateTextView.setText(forecast.getLocations());
+            nowTempTextView.setText(forecast.getTemp());
+            nowWeatherImageView.setImageResource(forecast.getNowWeatherImageView());
+            nowHumidityTextView.setText(getString(R.string.humidity) + forecast.getHumidity());
+            nowWindSpeedTextView.setText(getString(R.string.wind_speed) + forecast.getWindSpeed() + getString(R.string.m_c));
+            nowTimeTextView.setText(forecast.getTime());
+        }
 
-                    Double windSpeed = current.getWindSpeed();
-                    nowWindSpeedTextView.setText(getString(R.string.wind_speed) + " " + windSpeed + getString(R.string.m_c));
-
-                } else System.out.println("CATn sssssssssssssssssssssssqqqqqqqqqqqqqqqqqqqqqqqqq");
-            }
-
-            @Override
-            public void onFailure(Call<Example> call, Throwable t) {
-
-            }
-        });
     }
 
 
